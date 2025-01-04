@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencatatan Pengeluaran Bulanan</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .form-toggle {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .form-toggle a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        #welcome-container {
+            display: none;
+            text-align: center;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 50px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        #welcome-container h3 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            animation: fadeIn 2s;
+        }
+        #welcome-container p {
+            font-size: 20px;
+            margin-bottom: 20px;
+            animation: fadeIn 3s;
+        }
+        #welcome-container button {
+            padding: 10px 20px;
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        #welcome-container button:hover {
+            background-color: #e55347;
+        }
+        .start-recording-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .start-recording-btn:hover {
+            background-color: #007B8A;
+        }
+        #dashboard-container {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .dashboard-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .category-select {
+            margin-bottom: 15px;
+        }
+        #expense-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        #expense-table th, #expense-table td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        #expense-table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #expense-table td {
+            background-color: #f9f9f9;
+        }
+        #expense-table button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        #expense-table button:hover {
+            background-color: #e53935;
+        }
+        #total-expense {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .logout-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .logout-btn:hover {
+            background-color: #e53935;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="register-container">
+        <form id="register-form">
+            <label for="email">Email atau Nomor HP</label>
+            <input type="text" id="email" name="email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm-password">Konfirmasi Password</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+
+            <button type="submit">Daftar</button>
+        </form>
+        <div class="form-toggle">
+            <p>Sudah terdaftar? <a href="javascript:void(0);" onclick="toggleForms()">Masuk</a></p>
+        </div>
+    </div>
+
+    <div class="container" id="login-container" style="display: none;">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="login-email">Email atau Nomor HP</label>
+            <input type="text" id="login-email" name="login-email" required>
+
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="login-password" required>
+
+            <button type="submit">Masuk</button>
+        </form>
+        <div class="form-toggle">
+            <p>Belum punya akun? <a href="javascript:void(0);" onclick="toggleForms()">Daftar</a></p>
+        </div>
+    </div>
+
+    <div id="welcome-container">
+        <h3>Selamat Datang!</h3>
+        <p id="welcome-message">Halo, [email pengguna]!</p>
+        <button class="start-recording-btn" onclick="startRecording()">Mulai Pencatatan</button>
+    </div>
+
+    <div id="dashboard-container">
+        <div class="dashboard-form">
+            <h2>Pengeluaran Bulanan</h2>
+            <form id="expense-form">
+                <label for="expense-name">Nama Pengeluaran</label>
+                <input type="text" id="expense-name" name="expense-name" placeholder="Masukkan nama pengeluaran" required>
+
+                <label for="category">Pilih Kategori Pengeluaran</label>
+                <select id="category" name="category" class="category-select" required onchange="autoFillExpenseName()">
+                    <option value="Makanan">Makanan</option>
+                    <option value="Minuman">Minuman</option>
+                    <option value="Tempat Tinggal">Tempat Tinggal</option>
+                    <option value="Keperluan Rumah Tangga">Keperluan Rumah Tangga</option>
+                    <option value="Pendidikan">Pendidikan</option>
+                    <option value="Tabungan">Tabungan</option>
+                    <option value="Transportasi">Transportasi</option>
+                    <option value="Hiburan">Hiburan</option>
+                    <option value="Kesehatan">Kesehatan</option>
+                    <option value="Belanja">Belanja</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+
+                <label for="expense-amount">Jumlah Pengeluaran</label>
+                <input type="number" id="expense-amount" name="expense-amount" required>
+
+                <label for="expense-date">Tanggal Pengeluaran</label>
+                <input type="date" id="expense-date" name="expense-date" required>
+
+                <button type="submit">Simpan Pengeluaran</button>
+            </form>
+        </div>
+
+        <table id="expense-table">
+            <thead>
+                <tr>
+                    <th>Nama Pengeluaran</th>
+                    <th>Kategori</th>
+                    <th>Jumlah</th>
+                    <th>Tanggal</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="expense-table-body">
+                <!-- Daftar pengeluaran akan muncul di sini -->
+            </tbody>
+        </table>
+
+        <div id="total-expense">
+            Total Pengeluaran: Rp <span id="total-amount">0</span>
+        </div>
+
+        <button class="logout-btn" onclick="exitApp()">Keluar dari Aplikasi</button>
+    </div>
+
+    <script>
+        let totalExpense = 0;
+        const expenseTableBody = document.getElementById("expense-table-body");
+        const totalAmountElement = document.getElementById("total-amount");
+
+        function toggleForms() {
+            const registerContainer = document.getElementById("register-container");
+            const loginContainer = document.getElementById("login-container");
+            if (registerContainer.style.display === "none") {
+                registerContainer.style.display = "block";
+                loginContainer.style.display = "none";
+            } else {
+                registerContainer.style.display = "none";
+                loginContainer.style.display = "block";
+            }
+        }
+
+        document.getElementById("register-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+
+            if (password !== confirmPassword) {
+                alert("Password dan konfirmasi password tidak cocok!");
+                return;
+            }
+
+            localStorage.setItem("userEmail", email);
+            localStorage.setItem("userPassword", password);
+            alert("Pendaftaran berhasil!");
+            toggleForms();
+        });
+
+        document.getElementById("login-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+
+            const storedEmail = localStorage.getItem("userEmail");
+            const storedPassword = localStorage.getItem("userPassword");
+
+            if (email === storedEmail && password === storedPassword) {
+                localStorage.setItem("userEmail", email);
+                localStorage.setItem("userPassword", password);
+                showWelcomeMessage();
+            } else {
+                alert("Email atau password salah!");
+            }
+        });
+
+        function showWelcomeMessage() {
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("welcome-container").style.display = "block";
+
+            const email = localStorage.getItem("userEmail");
+            document.getElementById("welcome-message").innerText = "Halo, " + email + "!";
+
+            const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+            loadExpenses(expenses);
+        }
+
+        function loadExpenses(expenses) {
+            expenses.forEach(expense => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${expense.name}</td>
+                    <td>${expense.category}</td>
+                    <td>Rp ${expense.amount.toLocaleString()}</td>
+                    <td>${expense.date}</td>
+                    <td><button onclick="deleteExpense(this, ${expense.amount})">Hapus</button></td>
+                `;
+                expenseTableBody.appendChild(row);
+
+                totalExpense += expense.amount;
+            });
+            totalAmountElement.innerText = totalExpense.toLocaleString();
+        }
+
+        document.getElementById("expense-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const expenseName = document.getElementById("expense-name").value;
+            const category = document.getElementById("category").value;
+            const expenseAmount = parseFloat(document.getElementById("expense-amount").value);
+            const expenseDate = document.getElementById("expense-date").value;
+
+            const expense = {
+                name: expenseName,
+                category: category,
+                amount: expenseAmount,
+                date: expenseDate
+            };
+
+            const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+            expenses.push(expense);
+            localStorage.setItem("expenses", JSON.stringify(expenses));
+
+            totalExpense += expenseAmount;
+            totalAmountElement.innerText = totalExpense.toLocaleString();
+
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${expenseName}</td>
+                <td>${category}</td>
+                <td>Rp ${expenseAmount.toLocaleString()}</td>
+                <td>${expenseDate}</td>
+                <td><button onclick="deleteExpense(this, ${expenseAmount})">Hapus</button></td>
+            `;
+            expenseTableBody.appendChild(row);
+        });
+
+        function deleteExpense(button, expenseAmount) {
+            if (confirm("Apakah Anda yakin ingin menghapus pengeluaran ini?")) {
+                totalExpense -= expenseAmount;
+                totalAmountElement.innerText = totalExpense.toLocaleString();
+                button.parentElement.parentElement.remove();
+            }
+        }
+
+        function exitApp() {
+            if (confirm("Apakah Anda yakin ingin keluar dari aplikasi?")) {
+                localStorage.removeItem("userEmail");
+                localStorage.removeItem("userPassword");
+                location.reload();
+            }
+        }
+
+        function startRecording() {
+            document.getElementById("welcome-container").style.display = "none";
+            document.getElementById("dashboard-container").style.display = "block";
+        }
+    </script>
+</body>
+</html>
+
